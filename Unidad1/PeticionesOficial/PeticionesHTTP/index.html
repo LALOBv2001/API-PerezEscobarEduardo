@@ -14,6 +14,8 @@
     <button id="miBotonHTTPRequest">BotonHTTPRequest</button>
     <button id="miBotonJQuery">BotonJQuery</button>
     <button id="miBotonAxios">BotonAxios</button>
+    <button id="miBotonShiny">Podemos verlos Shiny</button>
+
     <br>
     <div id="elem">
 
@@ -183,6 +185,40 @@
                 //el img que ya teniamos debajo del div llamado 'imagen'
                 document.getElementById('imagen').src=res.data.sprites.front_default;
                 })
+        })
+
+        //---SHINY---
+        document.getElementById("miBotonShiny").addEventListener("click",function(){
+            // fetch("https://pokeapi.co/api/v2/pokemon/3/")
+            //Primero creamos una variable que nos traiga un numero del 0 al 210
+            var x = Math.ceil(Math.random()*210);
+            //Lo metemos junto al url para obtener un dato random cada vez que
+            //el usuario presione el boton 
+        var url="https://pokeapi.co/api/v2/pokemon/"+x+"/";
+        //Ahora hacemos una peticion al servidor
+            fetch(url)
+            //tendremos una respuesta del mismo que pasaremos a tipo Json con un metodito
+            .then(respuesta=> respuesta.json())
+            //Posterior a ello realizamos otra promesa para poder utilizarlo y la variable la llamamos datoJson
+              .then(datoJson=>{
+                /*creamos una variable llamada element para que nos traiga el div
+                que se llama elem para posterior a ello poder manipularlo a nuestro antojo*/
+                let element=document.getElementById('elem')
+                /*Ahora al elemento con la propiedad innerHTML le vamos a agregar lo que queramos 
+                como parrafos,imagenes,texto, otro div,etc.
+                para este caso agregaremos un parrafor que nos diga el nombre del 
+                pokemon consultado, porque una de las propiedades del objeto json es .name, 
+                o sea, el mismo nombre del pokemon en cuestion
+                
+                NOTA:Es muy importante que despues de .innerHTML=
+                se coloque la comilla invertida (`) no la comilla simple(')*/
+                element.innerHTML=`
+                <p>${datoJson.name}</p>
+                `;
+                //Nos traemos la imagen por default de nuestro objeto Json y la metemos en
+                //el img que ya teniamos debajo del div llamado 'imagen'
+                document.getElementById('imagen').src=datoJson.sprites.front_shiny
+              })
         })
     </script>
 </html>

@@ -23,24 +23,33 @@
          .then(respuesta=>respuesta.json())
          //Ahora haremos otra promesa para consumir la respuesta que nos dieron
           .then(dato =>{
-             console.log(dato);
+            //Obtenemos el objeto json lleno de categorias
+             console.log(dato)
+        //Para ello creamos un for, porque queremos meterle las cateogrias a nuestro combobox
           for(i=0;i< dato.length;i++){
+            //Imprimimos las categorias para confirmar
             console.log(dato[i])
+            //Creamos una variable que sera el objeto de tipo opcion para el combobox
             let opcion=document.createElement('option');
+            //a opcion le metemos de evalor el texto de la categoria y
+            //a su vez tambien el texto que vera el usuario es el mismo
             opcion.value=dato[i];
             opcion.text=dato[i];
+            //Ahora solamente le decimos que agregue esa categoria a nuestro combobox
             document.getElementById('categorias').appendChild(opcion);
 
           }})
 
         
           document.getElementById('btnPedir').addEventListener('click',function(){
+            //Agarramos el valor que tenga el combobox
             let seleccion=document.getElementById('categorias').value
+            //Consultamos el api diciendo que queremos el chiste de la categoria seleccionada
             let peticion='https://api.chucknorris.io/jokes/random?category='+seleccion;
-
             fetch(peticion)
              .then(response=>response.json())
                 .then(function(dato){
+                    //y la respuesta la metemos como texto a nuestro div caja
                     document.getElementById('caja').innerText=dato.value
                 })
           })
