@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi peticion 2</title>
+</head>
+<body>
+        
+    <select id="razas"><!-- Eeste es un combobox, dentro de los mismos tendra elementos option -->
+    </select>
+
+    <button id="btnPedir">GetChuk</button>
+    <div id="caja"></div>
+    <script>
+        //Este es un fetch, nos sirve para hacerle peticiones la servidor 
+        /*primero se utiliza fetch, el api a la que queramos hacerle la peticion 
+        para nuestro mismo programa*/
+        fetch('https://dogapi.dog/api/v2/breeds')
+        //Posterior a ello tendremos una repsuesta o un response
+        //y lo pasaremos a ser tipo json
+         .then(respuesta=>respuesta.json())
+         //Ahora haremos otra promesa para consumir la respuesta que nos dieron
+          .then(dato =>{
+            //Obtenemos el objeto json lleno de categorias
+             console.log(dato)
+        //Para ello creamos un for, porque queremos meterle las cateogrias a nuestro combobox
+        dato.data.forEach(elemento => {
+            //Imprimimos las categorias para confirmar
+            //Creamos una variable que sera el objeto de tipo opcion para el combobox
+            let opcion=document.createElement('option');
+            //a opcion le metemos de evalor el texto de la categoria y
+            //a su vez tambien el texto que vera el usuario es el mismo
+            opcion.value=elemento.id;
+            opcion.text=elemento.attributes.name;
+            //Ahora solamente le decimos que agregue esa categoria a nuestro combobox
+            document.getElementById('razas').appendChild(opcion);
+   
+        });  
+       })
+
+        
+          document.getElementById('btnPedir').addEventListener('click',function(){
+            //Agarramos el valor que tenga el combobox
+            let seleccion=document.getElementById('razas').value
+            //Consultamos el api diciendo que queremos el chiste de la categoria seleccionada
+            let peticion='https://dogapi.dog/api/v2/breeds/'+seleccion;
+            fetch(peticion)
+             .then(response=>response.json())
+                .then(function(dato){
+                    //y la respuesta la metemos como texto a nuestro div caja
+                    document.getElementById('caja').innerText=dato.data.attributes.description
+                })
+          })
+    </script>
+</body>
+</html>
