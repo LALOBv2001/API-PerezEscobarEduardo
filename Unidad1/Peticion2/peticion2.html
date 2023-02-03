@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi peticion 2</title>
+</head>
+<body>
+        
+    <select id="categorias"><!-- Eeste es un combobox, dentro de los mismos tendra elementos option -->
+    </select>
+
+    <button id="btnPedir">GetChuk</button>
+    <div id="caja"></div>
+    <script>
+        //Este es un fetch, nos sirve para hacerle peticiones la servidor 
+        /*primero se utiliza fetch, el api a la que queramos hacerle la peticion 
+        para nuestro mismo programa*/
+        fetch('https://api.chucknorris.io/jokes/categories')
+        //Posterior a ello tendremos una repsuesta o un response
+        //y lo pasaremos a ser tipo json
+         .then(respuesta=>respuesta.json())
+         //Ahora haremos otra promesa para consumir la respuesta que nos dieron
+          .then(dato =>{
+             console.log(dato);
+          for(i=0;i< dato.length;i++){
+            console.log(dato[i])
+            let opcion=document.createElement('option');
+            opcion.value=dato[i];
+            opcion.text=dato[i];
+            document.getElementById('categorias').appendChild(opcion);
+
+          }})
+
+        
+          document.getElementById('btnPedir').addEventListener('click',function(){
+            let seleccion=document.getElementById('categorias').value
+            let peticion='https://api.chucknorris.io/jokes/random?category='+seleccion;
+
+            fetch(peticion)
+             .then(response=>response.json())
+                .then(function(dato){
+                    document.getElementById('caja').innerText=dato.value
+                })
+          })
+    </script>
+</body>
+</html>

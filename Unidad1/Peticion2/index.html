@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery-3.6.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <button id="miBotonFetch">Botonfetch</button>
+    <button id="miBotonAsyncAwait">BotonAsyncAwait</button>
+    <button id="miBotonHTTPRequest">BotonHTTPRequest</button>
+    <button id="miBotonJQuery">BotonJQuery</button>
+    <button id="miBotonAxios">BotonAxios</button>
+    <br>
+    <div id="elem">
+
+    </div>
+    <img id="imagen">
+</body>
+    <script>
+        //---FETCH()---
+        document.getElementById("miBotonFetch").addEventListener("click",function(){
+            // fetch("https://pokeapi.co/api/v2/pokemon/3/")
+            //Primero creamos una variable que nos traiga un numero del 0 al 210
+            var x = Math.ceil(Math.random()*210);
+            //Lo metemos junto al url para obtener un dato random cada vez que
+            //el usuario presione el boton 
+        var url="https://pokeapi.co/api/v2/pokemon/"+x+"/";
+        //Ahora hacemos una peticion al servidor
+            fetch(url)
+            //tendremos una respuesta del mismo que pasaremos a tipo Json con un metodito
+            .then(respuesta=> respuesta.json())
+            //Posterior a ello realizamos otra promesa para poder utilizarlo y la variable la llamamos datoJson
+              .then(datoJson=>{
+                /*creamos una variable llamada element para que nos traiga el div
+                que se llama elem para posterior a ello poder manipularlo a nuestro antojo*/
+                let element=document.getElementById('elem')
+                /*Ahora al elemento con la propiedad innerHTML le vamos a agregar lo que queramos 
+                como parrafos,imagenes,texto, otro div,etc.
+                para este caso agregaremos un parrafor que nos diga el nombre del 
+                pokemon consultado, porque una de las propiedades del objeto json es .name, 
+                o sea, el mismo nombre del pokemon en cuestion
+                
+                NOTA:Es muy importante que despues de .innerHTML=
+                se coloque la comilla invertida (`) no la comilla simple(')*/
+                element.innerHTML=`
+                <p>${datoJson.name}</p>
+                `;
+                //Nos traemos la imagen por default de nuestro objeto Json y la metemos en
+                //el img que ya teniamos debajo del div llamado 'imagen'
+                document.getElementById('imagen').src=datoJson.sprites.front_default
+              })
+        })
+
+        //---ASYNC/AWAIT----
+        async function TrearPokemon() {
+        try {
+            var x = Math.ceil(Math.random()*210);
+            //Lo metemos junto al url para obtener un dato random cada vez que
+            //el usuario presione el boton 
+            var url="https://pokeapi.co/api/v2/pokemon/"+x+"/";
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(error);
+        }
+        }
+        document.getElementById('miBotonAsyncAwait').addEventListener("click",function(){
+            TrearPokemon()
+        .then(data => {
+            let element=document.getElementById('elem')
+                /*Ahora al elemento con la propiedad innerHTML le vamos a agregar lo que queramos 
+                como parrafos,imagenes,texto, otro div,etc.
+                para este caso agregaremos un parrafor que nos diga el nombre del 
+                pokemon consultado, porque una de las propiedades del objeto json es .name, 
+                o sea, el mismo nombre del pokemon en cuestion
+                
+                NOTA:Es muy importante que despues de .innerHTML=
+                se coloque la comilla invertida (`) no la comilla simple(')*/
+                element.innerHTML=`
+                <p>${data.name}</p>
+                `;
+                //Nos traemos la imagen por default de nuestro objeto Json y la metemos en
+                //el img que ya teniamos debajo del div llamado 'imagen'
+                document.getElementById('imagen').src=data.sprites.front_default
+     
+        })
+        })
+
+       
+        //--HTTPRequest---
+        document.getElementById('miBotonHTTPRequest').addEventListener("click",function() {
+            var x = Math.ceil(Math.random()*210);
+            //Lo metemos junto al url para obtener un dato random cada vez que
+            //el usuario presione el boton 
+            var url="https://pokeapi.co/api/v2/pokemon/"+x+"/";
+            const xhr=new XMLHttpRequest()
+            xhr.open('GET',url)
+            xhr.onload=function(){
+            	if(xhr.status==200){
+                    let res = JSON.parse(xhr.responseText)
+                    let element=document.getElementById('elem')
+                /*Ahora al elemento con la propiedad innerHTML le vamos a agregar lo que queramos 
+                como parrafos,imagenes,texto, otro div,etc.
+                para este caso agregaremos un parrafor que nos diga el nombre del 
+                pokemon consultado, porque una de las propiedades del objeto json es .name, 
+                o sea, el mismo nombre del pokemon en cuestion
+                
+                NOTA:Es muy importante que despues de .innerHTML=
+                se coloque la comilla invertida (`) no la comilla simple(')*/
+                element.innerHTML=`
+                <p>${res.name}</p>
+                `;
+                //Nos traemos la imagen por default de nuestro objeto Json y la metemos en
+                //el img que ya teniamos debajo del div llamado 'imagen'
+                document.getElementById('imagen').src=res.sprites.front_default
+            	// document.querySelector('#respuesta').inneHTML=ajax.resposneText;	
+            	}
+            	else{
+            	document.querySelector('#respuesta').innerHTML='Peticion erronea';
+            	}
+            }
+            xhr.send();
+           
+        })
+
+        //--JQuery---
+        document.getElementById('miBotonJQuery').addEventListener('click',()=>{
+            var x = Math.ceil(Math.random()*210);
+            //Lo metemos junto al url para obtener un dato random cada vez que
+            //el usuario presione el boton 
+            var miurl="https://pokeapi.co/api/v2/pokemon/"+x+"/"
+            $.ajax({
+                type:'GET',
+                url: miurl,
+                contentType: 'application/json',
+                async: true,
+                success: (data)=> {
+                    let element=document.getElementById('elem')
+                /*Ahora al elemento con la propiedad innerHTML le vamos a agregar lo que queramos 
+                como parrafos,imagenes,texto, otro div,etc.
+                para este caso agregaremos un parrafor que nos diga el nombre del 
+                pokemon consultado, porque una de las propiedades del objeto json es .name, 
+                o sea, el mismo nombre del pokemon en cuestion
+                
+                NOTA:Es muy importante que despues de .innerHTML=
+                se coloque la comilla invertida (`) no la comilla simple(')*/
+                element.innerHTML=`
+                <p>${data.name}</p>
+                `;
+                //Nos traemos la imagen por default de nuestro objeto Json y la metemos en
+                //el img que ya teniamos debajo del div llamado 'imagen'
+                document.getElementById('imagen').src=data.sprites.front_default                }
+            })
+        })
+
+        //--AXIOS--
+              document.getElementById('miBotonAxios').addEventListener('click',()=>{
+            var x = Math.ceil(Math.random()*210);
+            //Lo metemos junto al url para obtener un dato random cada vez que
+            //el usuario presione el boton 
+            var url="https://pokeapi.co/api/v2/pokemon/"+x+"/";
+            axios.get(url)
+            .then(res=>{
+                console.log(res)
+                let element=document.getElementById('elem')
+                /*Ahora al elemento con la propiedad innerHTML le vamos a agregar lo que queramos 
+                como parrafos,imagenes,texto, otro div,etc.
+                para este caso agregaremos un parrafor que nos diga el nombre del 
+                pokemon consultado, porque una de las propiedades del objeto json es .name, 
+                o sea, el mismo nombre del pokemon en cuestion
+                
+                NOTA:Es muy importante que despues de .innerHTML=
+                se coloque la comilla invertida (`) no la comilla simple(')*/
+                element.innerHTML=`
+                <p>${res.data.name}</p>
+                `;
+                //Nos traemos la imagen por default de nuestro objeto Json y la metemos en
+                //el img que ya teniamos debajo del div llamado 'imagen'
+                document.getElementById('imagen').src=res.data.sprites.front_default;
+                })
+        })
+    </script>
+</html>
