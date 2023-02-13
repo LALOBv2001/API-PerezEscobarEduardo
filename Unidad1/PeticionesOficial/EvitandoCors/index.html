@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Un formulario puede hacer cualquier peticion como get o post -->
+    <form method="get" action="http://localhost:8081/alumnos/sistemas">
+        <button id="btn1"type="submit">PeticionFormulario</button>
+        <button id="btn2"type="button">PeticionFetch</button>
+    </form>
+    <script>
+        document.getElementById("btn2").addEventListener("click",()=>{
+            fetch('http://localhost:8081/alumnos/sistemas')
+        .then(respuesta=>respuesta.json())
+        .then(dato=> console.log(dato))
+        })
+       
+    </script>
+</body>
+</html>
