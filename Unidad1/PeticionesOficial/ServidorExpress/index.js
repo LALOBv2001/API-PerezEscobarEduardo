@@ -1,9 +1,23 @@
 const express=require('express');
+const cors=require('cors');
+const morgan=require('morgan');//Con este paquete podemos saber cuando se hizo la peticion, la ip de la computadora,la tipo de peticion y la fecha
+var fs = require('fs')
+var path = require('path')
+ 
 const app=express();
+ 
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+ 
+// setup the logger
+app.use(morgan('combined', { stream: accessLogStream }))
+
+ app.use(cors())
+app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.text());
-/*Para acceder a paramtros se utilizan dos puntos : 
 
+/*Para acceder a paramtros se utilizan dos puntos : 
 Parametro en la ruta*/
 app.get('/alumnos/:carrera',(req,res)=>{
     // console.log(req.params.carrera)
