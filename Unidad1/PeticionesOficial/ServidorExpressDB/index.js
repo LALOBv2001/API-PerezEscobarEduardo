@@ -17,7 +17,7 @@ app.get('/vuelo/',async(req,res)=>{
      const connection = await mysql.createConnection({host:'localhost', user: 'root', database: 'basewebvuelo'});
   // query database
     const [rows, fields] = await connection.execute('SELECT * FROM vuelo');
-    res.jsonp({alumnos:'Peticion get a la ruta de alumnos '+req.params.carrera})
+    // res.jsonp({alumnos:'Peticion get a la ruta de alumnos '+req.params.carrera})
     res.json(rows);
 })
 app.get('/vuelo/:id',async(req,res)=>{
@@ -32,16 +32,16 @@ app.get('/vuelo/:id',async(req,res)=>{
     else
     res.json(rows);
 })
-//Parametros por QueryString
-app.get('/maestros/',(req,res)=>{
-   console.log( req.query.control)
-    res.json({maestro:'Peticion get a la ruta de maestros '+req.query.control})
-})
-//Parametros en el body
-app.post('/administrativos',(req,res)=>{
-//    console.log( req.body.nombre)
-    res.json({admin:'Peticion post a la ruta de administrativos '+req.body.nombre+" "+req.body.apellido})
-})
+// //Parametros por QueryString
+// app.get('/maestros/',(req,res)=>{
+//    console.log( req.query.control)
+//     res.json({maestro:'Peticion get a la ruta de maestros '+req.query.control})
+// })
+// //Parametros en el body
+// app.post('/administrativos',(req,res)=>{
+// //    console.log( req.body.nombre)
+//     res.json({admin:'Peticion post a la ruta de administrativos '+req.body.nombre+" "+req.body.apellido})
+// })
 
 app.use((req,res)=>{
     res.status(404).json({estado:"Ruta no encontrada"})
