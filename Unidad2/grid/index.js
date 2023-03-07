@@ -1,9 +1,9 @@
 new gridjs.Grid({
-    columns: ['NombrePiloto','NombreCopiloto','CapacidadPasajeros','CapacidadGalonesCombustible','PaisDespegue','PaisAterrizaje','CostoBoleto','CapacidadEquipajePasajero','DuracionVueloHoras'],
+    columns: ['ID','NombrePiloto','NombreCopiloto','CapacidadPasajeros','CapacidadGalonesCombustible','PaisDespegue','PaisAterrizaje','CostoBoleto','CapacidadEquipajePasajero','DuracionVueloHoras'],
     server:{
         url:'http://localhost:8081/vuelo/',
         then: data => data.map((user) => [
-            // user.ID,
+            user.ID,
             user.NombrePiloto,
             user.NombreCopiloto,
             user.CapacidadPasajeros,
