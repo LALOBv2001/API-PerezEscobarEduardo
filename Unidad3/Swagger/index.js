@@ -50,7 +50,7 @@ app.use(cors());
 /*Para acceder a paramtros se utilizan dos puntos : 
 
 Parametro en la ruta*/
-app.get("/vuelo/", async (req, res) => {
+app.get('/vuelo/', async (req, res) => {
   // console.log(req.params.carrera)
   const connection = await mysql.createConnection({
     host: "localhost",
@@ -66,7 +66,7 @@ app.get("/vuelo/", async (req, res) => {
 
  /**
  * @swagger
- * /id:
+ * /vuelo:
  *   post:
  *     tags:
  *       - vuelo
@@ -75,9 +75,9 @@ app.get("/vuelo/", async (req, res) => {
  *     requestBody:
  *       description: Crea un nuevo vuelo
  *       content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/vuelo'
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/vuelo-post'
  *     responses:
  *       200:
  *         description: Vuelo insertado con éxito
@@ -108,12 +108,12 @@ app.post("/vuelo", async (req, res) => {
   // res.jsonp({alumnos:'Peticion get a la ruta de alumnos '+req.params.carrera})
   // res.json(rows);
   // if (rows.affectedRows==1){
-  res.json({ estatus: "Insercion realizada con exito" });
+  res.json({ estatus: "Insercion realizada con exito del vuelo del capitan "+NombrePiloto });
   // }
 });
 /**
  * @swagger
- * /vuelo/:id:
+ * /vuelo/{id}:
  *  get:
  *    tags:
  *      - vuelo
@@ -124,36 +124,26 @@ app.post("/vuelo", async (req, res) => {
  *        in: path
  *        description: id del vuelo a consultar
  *        required: true
- *        schema:
- *          type: int
- *          format: int
  *    responses:
  *      200:
  *        description: Regresa el vuelo solicitado
  *      400:
  *        description: No se encontro el vuelo solicitado
  */
-app.get("/vuelo/:id", async (req, res) => {
-  // console.log(req.params.carrera)
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "basewebvuelo",
-  });
-  // query database
-  const [rows, fields] = await connection.execute(
-    "SELECT * FROM vuelo where id = ?",
-    [req.params.id]
-  );
-  // res.jsonp({alumnos:'Peticion get a la ruta de alumnos '+req.params.carrera})
-  if (rows.length == 0) {
-    res.json("registro:No se encontro usuario");
-  } else res.json(rows);
-});
+app.get('/vuelo/:id',async(req,res)=>{
+   const connection = await mysql.createConnection({host:'localhost', user: 'root', database: 'basewebvuelo'});
+// query database
+  const [rows, fields] = await connection.execute('SELECT * FROM vuelo where id = ?',[req.params.id]);
+  if(rows.length==0){
+      res.json("registro:No se encontro usuario")
+  }
+  else
+  res.json(rows);
+})
 
 /**
  * @swagger
- * /vuelo/:id:
+ * /vuelo/{id}:
  *   delete:
  *     tags:
  *       - vuelo
@@ -164,9 +154,6 @@ app.get("/vuelo/:id", async (req, res) => {
  *         in: path
  *         description: id del vuelo a eliminar
  *         required: true
- *         schema:
- *          type: int
- *          format: int
  *     responses:
  *       200:
  *         description: Vuelo eliminado con éxito
@@ -190,20 +177,26 @@ app.delete("/vuelo/:id", async (req, res) => {
   console.log("El usuario se elimino con exito");
 });
 
+
 /**
  * @swagger
- * /vuelos/:id:
- *  patch:
+ * /vuelo/{id}:
+ *  put:
  *    tags:
  *      - vuelo
  *    summary: Actualizar vuelo
- *    description: Peticion de tipo put a la ruta de vuelos
+ *    description: Peticion de tipo put a la ruta de vuelo
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        description: el id del vuelo a actualizar
+ *        required: true
  *    requestBody:
- *       description: Actualiza los datos de un vuelo
+ *       description: Actualiza los datos de un vuelo posterior de haber ingresado el numero de vuelo junto con los campos a actualizar.
  *       content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/vuelo'
+ *               $ref: '#/components/schemas/vuelo-put'
  *       required: true
  *    responses:
  *      200:
@@ -249,7 +242,6 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs,options));
 app.get("/docs.json",(req,res)=>{
   res.json(swaggerDocs);
 })
-
 app.get(
   '/redocs',
   redoc({
@@ -269,6 +261,90 @@ app.use((req, res) => {
   res.status(404).json({ estado: "Ruta no encontrada" });
 });
 
-app.listen(8084, () => {
+app.listen(8085, () => {
   console.log("Servidor express escuchando en el puerto 8084");
 });
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     vuelo-post:
+ *       type: object
+ *       properties:
+ *         NombrePiloto:
+ *           type: string
+ *           format: string
+ *           example: Eduardo Perez
+ *         NombreCopiloto:
+ *           type: string
+ *           format: string
+ *           example: Jordan Diaz
+ *         CapacidadPasajeros:
+ *           type: integer
+ *           format: int64
+ *           example: 100
+ *         CapacidadGalonesCombustible:
+ *           type: integer
+ *           format: int64
+ *           example: 10
+ *         PaisDespegue:
+ *           type: string
+ *           format: string
+ *           example: Oaxaca
+ *         PaisAterrizaje:
+ *           type: string
+ *           format: string
+ *           example: Mexico
+ *         CostoBoleto:
+ *           type: double
+ *           format: double
+ *           example: 2200.99
+ *         CapacidadEquipajePasajero:
+ *           type: double
+ *           format: double
+ *           example: 22.50
+ *         DuracionVueloHoras:
+ *           type: integer
+ *           format: int64
+ *           example: 8
+ *     vuelo-put:
+ *       type: object
+ *       properties:
+ *         NombrePiloto:
+ *           type: string
+ *           format: string
+ *           example: Eduardo Perez
+ *         NombreCopiloto:
+ *           type: string
+ *           format: string
+ *           example: Jordan Diaz
+ *         CapacidadPasajeros:
+ *           type: integer
+ *           format: int64
+ *           example: 100
+ *         CapacidadGalonesCombustible:
+ *           type: integer
+ *           format: int64
+ *           example: 10
+ *         PaisDespegue:
+ *           type: string
+ *           format: string
+ *           example: Oaxaca
+ *         PaisAterrizaje:
+ *           type: string
+ *           format: string
+ *           example: Mexico
+ *         CostoBoleto:
+ *           type: double
+ *           format: double
+ *           example: 2200.99
+ *         CapacidadEquipajePasajero:
+ *           type: double
+ *           format: double
+ *           example: 22.50
+ *         DuracionVueloHoras:
+ *           type: integer
+ *           format: int64
+ *           example: 8
+ */ 
